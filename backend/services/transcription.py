@@ -126,7 +126,8 @@ def _transcribe_local_whisper(file_path: str, language: str = "ja") -> dict:
     """faster-whisper でローカル文字起こし。pip install faster-whisper"""
     from faster_whisper import WhisperModel
 
-    model_size = os.environ.get("WHISPER_MODEL_SIZE", "small")  # base→small: 日本語精度向上
+    # Railway 無料枠はメモリ制限あり。base が安定しやすい（small は OOM しやすい）
+    model_size = os.environ.get("WHISPER_MODEL_SIZE", "base")
     device = "cuda" if os.environ.get("WHISPER_DEVICE") == "cuda" else "cpu"
     logger.info("Local Whisper: transcribing %s (model=%s, device=%s)", file_path, model_size, device)
 
