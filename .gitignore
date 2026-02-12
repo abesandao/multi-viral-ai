@@ -1,0 +1,19 @@
+# 環境変数（APIキー含む）
+.env
+.env.local
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# Node
+node_modules/
+
+# Next.js
+.next/
+
+# アップロードファイル（ローカル実行時に生成）
+backend/uploads/

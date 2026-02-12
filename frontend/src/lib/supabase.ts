@@ -1,0 +1,13 @@
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+
+const isConfigured =
+  supabaseUrl &&
+  supabaseAnonKey &&
+  supabaseUrl !== "https://your-project.supabase.co";
+
+export const supabase: SupabaseClient | null = isConfigured
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null;
