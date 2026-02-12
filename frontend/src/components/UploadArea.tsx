@@ -61,9 +61,10 @@ export default function UploadArea({ onJobStarted }: UploadAreaProps) {
       clearInterval(interval);
       const msg = err instanceof Error ? err.message : "アップロードに失敗しました。";
       const isNetwork = msg.includes("fetch") || msg.includes("Failed") || msg.includes("Network");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001";
       setError(
         isNetwork || msg === "Upload failed"
-          ? "接続できません。バックエンドが http://localhost:8001 で起動しているか確認してください。"
+          ? `接続できません。API が ${apiUrl} で起動しているか確認してください。本番環境では Vercel の環境変数 NEXT_PUBLIC_API_URL に Railway の URL を設定してください。`
           : msg
       );
       setState("idle");
