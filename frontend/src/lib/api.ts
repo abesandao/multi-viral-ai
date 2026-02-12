@@ -1,4 +1,4 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8001";
+const API_BASE = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8001").replace(/\/$/, "");
 
 export type VideoLang = "ja" | "en";
 export type OutputLang = "same" | "ja";
@@ -65,6 +65,16 @@ export async function generateContent(jobId: string) {
 export async function getJobStatus(jobId: string) {
   const res = await fetch(`${API_BASE}/api/jobs/${jobId}`);
 
-  if (!res.ok) throw new Error("Failed to fetch status");
+  if (!res.ok) {
+    const text = await res.text();
+    let msg = "Failed to fetch status";
+    try {
+      const json = JSON.parse(text);
+      msg = json.detail || msg;
+    } catch {
+      if (text) msg = text.slice(0, 100);
+    }
+    throw new Error(`[${res.status}] ${msg}`);
+  }
   return res.json();
 }

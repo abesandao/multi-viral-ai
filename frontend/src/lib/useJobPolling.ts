@@ -40,8 +40,13 @@ export function useJobPolling(jobId: string, intervalMs = 3000) {
         // 完了したらポーリング停止
         if (timerRef.current) clearInterval(timerRef.current);
       }
-    } catch {
-      setPollError("ステータスの取得に失敗しました");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "ステータスの取得に失敗しました";
+      if (msg.includes("[404]") || msg.includes("Job not found")) {
+        setPollError("ジョブが見つかりません。バックエンドが再起動した可能性があります。最初からやり直してください。");
+      } else {
+        setPollError(msg.includes("[") ? msg : `ステータスの取得に失敗しました: ${msg}`);
+      }
     } finally {
       setLoading(false);
     }
